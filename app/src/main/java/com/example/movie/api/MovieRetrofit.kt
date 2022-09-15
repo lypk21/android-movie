@@ -10,6 +10,6 @@ interface MovieRetrofit {
     @GET("movie/popular")
     suspend fun getList(@Query("api_key") token: String, @Query("page") page: Int): MoviesResponse
 
-    @GET("movie")
-    suspend fun getDetail(@Query("api_key") token: String, @Path("id") id:Int): MovieApiEntity
+    @GET("movie/{id}")
+    suspend fun getDetail(@Path("id") movieId:Int, @Query("api_key") token: String): MovieApiEntity
 }

@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieAdapter(private val movies: ArrayList<MovieRoomEntity>): RecyclerView.Adapter<MovieAdapter.DataViewHolder>() {
 
+    private lateinit var listener: Listener
 
     class DataViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(movie: MovieRoomEntity) {
@@ -26,6 +27,9 @@ class MovieAdapter(private val movies: ArrayList<MovieRoomEntity>): RecyclerView
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
        holder.bind(movies[position])
+        holder.itemView.rv_image.setOnClickListener {
+            listener.onItemClick(movies[position].movieId)
+        }
     }
 
     override fun getItemCount(): Int = movies.size
@@ -42,5 +46,13 @@ class MovieAdapter(private val movies: ArrayList<MovieRoomEntity>): RecyclerView
         return DataViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_movie, parent, false)
         )
+    }
+
+    interface Listener {
+        fun onItemClick(moveId: Int)
+    }
+
+    fun setListener(listener: Listener) {
+        this.listener = listener
     }
 }

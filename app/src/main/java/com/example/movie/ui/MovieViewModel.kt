@@ -18,9 +18,13 @@ class MovieViewModel
     @ViewModelInject
     constructor(private val movieRepository: MovieRepository): ViewModel() {
     private val _movies : MutableLiveData<Resource<List<MovieRoomEntity>>> = MutableLiveData()
+    private val _movie : MutableLiveData<Resource<MovieRoomEntity>> = MutableLiveData()
 
     val movies : LiveData<Resource<List<MovieRoomEntity>>>
             get() = _movies
+
+    val movie : LiveData<Resource<MovieRoomEntity>>
+        get() = _movie
 
     fun getMovies(page: Int)  {
         viewModelScope.launch {
@@ -31,4 +35,12 @@ class MovieViewModel
         }
     }
 
+    fun getMovieById(movieId: Int) {
+        viewModelScope.launch {
+            movieRepository.getDetail(movieId).onEach {
+                _movie.value = it
+            }
+                .launchIn(viewModelScope)
+        }
+    }
 }

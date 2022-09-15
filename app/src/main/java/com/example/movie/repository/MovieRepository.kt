@@ -43,4 +43,30 @@ class MovieRepository(
        }
    }
 
+   suspend fun getDetail(movieId: Int): Flow<Resource<MovieRoomEntity>> = flow {
+       emit(Resource.loading(null))
+       try {
+           val movie = movieRetrofit.getDetail(movieId, token)
+           movieDAO.insert(
+               MovieRoomEntity(
+                   movieId = movie.id,
+                   backdropPath = movie.backdropPath,
+                   originalLanguage = movie.originalLanguage,
+                   originalTitle = movie.originalTitle,
+                   overview = movie.overview,
+                   popularity = movie.popularity,
+                   posterPath = movie.posterPath,
+                   releaseDate = movie.releaseDate,
+                   title = movie.title,
+                   video = movie.video,
+                   voteAverage = movie.voteAverage,
+                   voteCount = movie.voteCount
+               ))
+
+           emit(Resource.success(movieDAO.getDetail(movieId)))
+       } catch (e: Exception) {
+           emit(Resource.error(e.message.toString(), null))
+           emit(Resource.success(movieDAO.getDetail(movieId)))
+       }
+   }
 }

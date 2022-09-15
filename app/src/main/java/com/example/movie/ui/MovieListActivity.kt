@@ -1,5 +1,6 @@
 package com.example.movie.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movie.R
+import com.example.movie.ui.MovieAdapter.Listener
 import com.example.movie.util.MOVIE_DISPLAY_COLUMN
 import com.example.movie.util.MOVIE_PAGINATION_PAGE_SIZE
 import com.example.movie.util.PageInfo
@@ -16,14 +18,14 @@ import com.example.movie.util.Status
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_movie_list.*
 import kotlinx.android.synthetic.main.common_loading.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MovieListActivity : AppCompatActivity() {
-    private val TAG: String = "MainActivity"
+    private val TAG: String = "MovieListActivity"
     private lateinit var adapter: MovieAdapter
     private val pageInfo = PageInfo()
 
@@ -31,7 +33,7 @@ class MovieListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_movie_list)
         setupUI()
         subscribeObservers()
         viewModel.getMovies(pageInfo.page)
@@ -50,18 +52,16 @@ class MovieListActivity : AppCompatActivity() {
                     recyclerView.visibility = View.VISIBLE
                     finishRefreshLoadMore()
                     it.data?.let { movies ->
-                        it.data?.let { movies ->
-                            if (pageInfo.isFirstPage) {
-                                adapter.initData(movies)
-                            } else {
-                                adapter.addData(movies)
-                                adapter.notifyDataSetChanged()
-                            }
+                        if (pageInfo.isFirstPage) {
+                            adapter.initData(movies)
+                        } else {
+                            adapter.addData(movies)
+                            adapter.notifyDataSetChanged()
+                        }
 
-                            if(movies.size < MOVIE_PAGINATION_PAGE_SIZE) {
-                                Log.d("getMoviespageSize3", "MOVIE_PAGINATION_PAGE_SIZE")
-                                smartRefresh.finishLoadMoreWithNoMoreData()
-                            }
+                        if(movies.size < MOVIE_PAGINATION_PAGE_SIZE) {
+                            Log.d("getMoviespageSize3", "MOVIE_PAGINATION_PAGE_SIZE")
+                            smartRefresh.finishLoadMoreWithNoMoreData()
                         }
                     }
                 }
@@ -93,7 +93,13 @@ class MovieListActivity : AppCompatActivity() {
             }
         })
 
-
+        adapter.setListener(object : Listener {
+            override fun onItemClick(moveId: Int) {
+                var intent = Intent(this@MovieListActivity, MovieDetailActivity::class.java)
+                intent.putExtra("movieId", moveId)
+                startActivity(intent)
+            }
+        })
 
     }
 

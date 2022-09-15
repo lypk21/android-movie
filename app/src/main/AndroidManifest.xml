@@ -20,6 +20,9 @@ package="com.example.movie">
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
+    <activity android:name=".ui.MovieDetailActivity"
+        android:theme="@style/AppTheme.NoActionBar"
+        />
 </application>
 
 </manifest>

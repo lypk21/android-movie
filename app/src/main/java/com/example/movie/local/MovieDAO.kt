@@ -15,4 +15,7 @@ interface MovieDAO {
     @Query("SELECT * FROM movies ORDER BY id ASC LIMIT :pageSize OFFSET :page")
     suspend fun getList( page: Int,
                          pageSize: Int? = MOVIE_PAGINATION_PAGE_SIZE): List<MovieRoomEntity>
+
+    @Query("SELECT * FROM movies where movieId = :movieId")
+    suspend fun getDetail(movieId: Int): MovieRoomEntity
 }
