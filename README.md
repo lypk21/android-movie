@@ -12,7 +12,7 @@ This project complete tasks:
 2. Project structure, components and functions overview 
     1) using Kotlin MVVM, the structure: <br>     
        <img src="https://github.com/lypk21/android-movie/blob/main/image1.jpeg" width="600">
-    2) using Hint(dagger2) to manage the dependence injection, please refer to di folder
+    2) using Hilt(dagger2) to manage the dependence injection, please refer to di folder
     3) using Room for data cache, when the network disconnected, can still show data to end users.
     4) using Retrofit for network request and Coroutine to manage the network response
     5) using recycleview and smartRefreshLayout to implement pagination function
