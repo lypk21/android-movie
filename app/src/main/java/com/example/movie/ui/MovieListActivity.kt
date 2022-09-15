@@ -58,9 +58,8 @@ class MovieListActivity : AppCompatActivity() {
                             adapter.initData(movies)
                         } else {
                             adapter.addData(movies)
-                            adapter.notifyDataSetChanged()
                         }
-
+                        adapter.notifyDataSetChanged()
                         if(movies.size < MOVIE_PAGINATION_PAGE_SIZE) {
                             smartRefresh.finishLoadMoreWithNoMoreData()
                         }
