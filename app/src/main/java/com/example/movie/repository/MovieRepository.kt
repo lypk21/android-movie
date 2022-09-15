@@ -18,25 +18,26 @@ class MovieRepository(
        emit(Resource.loading(null))
        try {
            val moviesApi = movieRetrofit.getList(token, page)
+           val moviesLocal = ArrayList<MovieRoomEntity>()
            for (movie in moviesApi.results) {
-               movieDAO.insert(
-                   MovieRoomEntity(
-                       movieId = movie.id,
-                       backdropPath = movie.backdropPath,
-                       originalLanguage = movie.originalLanguage,
-                       originalTitle = movie.originalTitle,
-                       overview = movie.overview,
-                       popularity = movie.popularity,
-                       posterPath = movie.posterPath,
-                       releaseDate = movie.releaseDate,
-                       title = movie.title,
-                       video = movie.video,
-                       voteAverage = movie.voteAverage,
-                       voteCount = movie.voteCount
-               ))
+               val movieRoom = MovieRoomEntity(
+                   movieId = movie.id,
+                   backdropPath = movie.backdropPath,
+                   originalLanguage = movie.originalLanguage,
+                   originalTitle = movie.originalTitle,
+                   overview = movie.overview,
+                   popularity = movie.popularity,
+                   posterPath = movie.posterPath,
+                   releaseDate = movie.releaseDate,
+                   title = movie.title,
+                   video = movie.video,
+                   voteAverage = movie.voteAverage,
+                   voteCount = movie.voteCount
+               )
+               movieDAO.insert(movieRoom)
+               moviesLocal.add(movieRoom)
            }
-           val movies = movieDAO.getList(page);
-           emit(Resource.success(movies))
+           emit(Resource.success(moviesLocal))
        } catch (e: Exception) {
            emit(Resource.error(e.message.toString(), null))
            emit(Resource.success(movieDAO.getList(page)))
