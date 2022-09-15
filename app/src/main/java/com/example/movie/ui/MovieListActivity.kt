@@ -2,6 +2,8 @@ package com.example.movie.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -60,7 +62,6 @@ class MovieListActivity : AppCompatActivity() {
                         }
 
                         if(movies.size < MOVIE_PAGINATION_PAGE_SIZE) {
-                            Log.d("getMoviespageSize3", "MOVIE_PAGINATION_PAGE_SIZE")
                             smartRefresh.finishLoadMoreWithNoMoreData()
                         }
                     }
@@ -101,10 +102,35 @@ class MovieListActivity : AppCompatActivity() {
             }
         })
 
+        edSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+              val searchTerm = edSearch.text.toString().trim()
+              if(searchTerm.length > 0) {
+                  pageInfo.reset()
+                  searchDelete.visibility = View.VISIBLE
+                  viewModel.searchMovies(searchTerm, pageInfo.page)
+              } else {
+                  searchDelete.visibility = View.GONE
+                  viewModel.getMovies(pageInfo.page)
+              }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        searchDelete.setOnClickListener {
+            edSearch.setText("")
+            pageInfo.reset()
+            viewModel.getMovies(pageInfo.page)
+        }
+
     }
 
     private fun finishRefreshLoadMore() {
-        Log.d("getMoviespageSize4", "finishRefreshLoadMore")
         smartRefresh.finishRefresh()
         smartRefresh.finishLoadMore()
     }

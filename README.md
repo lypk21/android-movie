@@ -16,7 +16,8 @@ This project complete tasks:
     3) using Room for data cache, when the network disconnected, can still show data to end users.
     4) using Retrofit for network request and Coroutine to manage the network response
     5) using recycleview and smartRefreshLayout to implement pagination function
-    6) using Glide for image url cache
+    6) using search/movie api to implement search function
+    7) using Glide for image url cache
 
 3. How the UI look like:
    <br>     

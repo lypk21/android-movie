@@ -43,6 +43,34 @@ class MovieRepository(
        }
    }
 
+   suspend fun searchMovies(search:String,  page: Int): Flow<Resource<List<MovieRoomEntity>>> = flow {
+       emit(Resource.loading(null))
+       try {
+           val moviesApi = movieRetrofit.searchList(token,search, page)
+           val moviesLocal = ArrayList<MovieRoomEntity>()
+           for (movie in moviesApi.results) {
+               moviesLocal.add(
+                MovieRoomEntity(
+                   movieId = movie.id,
+                   backdropPath = movie.backdropPath,
+                   originalLanguage = movie.originalLanguage,
+                   originalTitle = movie.originalTitle,
+                   overview = movie.overview,
+                   popularity = movie.popularity,
+                   posterPath = movie.posterPath,
+                   releaseDate = movie.releaseDate,
+                   title = movie.title,
+                   video = movie.video,
+                   voteAverage = movie.voteAverage,
+                   voteCount = movie.voteCount
+               ))
+           }
+           emit(Resource.success(moviesLocal))
+       } catch (e: Exception) {
+           emit(Resource.error(e.message.toString(), null))
+       }
+   }
+
    suspend fun getDetail(movieId: Int): Flow<Resource<MovieRoomEntity>> = flow {
        emit(Resource.loading(null))
        try {

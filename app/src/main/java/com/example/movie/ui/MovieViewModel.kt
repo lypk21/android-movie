@@ -35,6 +35,15 @@ class MovieViewModel
         }
     }
 
+    fun searchMovies(searchTerm: String, page: Int) {
+        viewModelScope.launch {
+            movieRepository.searchMovies(searchTerm, page).onEach {
+                _movies.value = it
+            }
+            .launchIn(viewModelScope)
+        }
+    }
+
     fun getMovieById(movieId: Int) {
         viewModelScope.launch {
             movieRepository.getDetail(movieId).onEach {
